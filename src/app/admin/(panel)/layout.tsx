@@ -72,6 +72,7 @@ export default async function PanelLayout({ children }: { children: React.ReactN
         <div className="mt-8 border-t border-white/10 pt-5 text-xs">
           <p className="text-white">{user.name}</p>
           <p>{ROLE_LABELS[user.role]}</p>
+          <Link href="/admin/cuenta" className="mt-3 block text-blue-300 hover:text-white">Mi cuenta y contraseña</Link>
           <form action={logout}>
             <button className="mt-3 text-blue-300 hover:text-white">Cerrar sesión</button>
           </form>

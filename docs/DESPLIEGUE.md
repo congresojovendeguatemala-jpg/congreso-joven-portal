@@ -1,28 +1,51 @@
 # Despliegue
 
-Configuración recomendada: **Vercel** (aplicación Next.js) + **Supabase** o **Neon** (PostgreSQL administrado) + **Cloudflare R2** (archivos, compatible con S3). Las tres opciones tienen planes gratuitos suficientes para empezar.
+## Configuración actual (noviembre de 2026)
 
-## 1. Base de datos
-1. Crea un proyecto PostgreSQL (Supabase o Neon) y copia la cadena de conexión `postgres://…`.
-2. Desde tu equipo, con esa cadena en `DATABASE_URL`:
-   ```powershell
-   $env:DATABASE_URL="postgres://..."; npm run db:setup
-   $env:DATABASE_URL="postgres://..."; npm run admin:create -- correo@dominio.org "Nombre Apellido"
-   ```
-   Con `DATABASE_URL` definida, el sistema usa PostgreSQL en lugar de PGlite.
+| Pieza | Servicio | Detalle |
+|---|---|---|
+| Código | GitHub | Repositorio privado `congresojovendeguatemala-jpg/congreso-joven-portal`, rama `main` |
+| Sitio | Vercel | Proyecto `congreso-joven-portal`, región `iad1`, https://congreso-joven-portal.vercel.app |
+| Base de datos | Neon (PostgreSQL), integración del Marketplace de Vercel | Variables `DATABASE_URL` / `POSTGRES_URL` puestas por la integración |
+| Archivos | Vercel Blob, store `congreso-joven-archivos` (público) | Variable `BLOB_READ_WRITE_TOKEN`, solo en Production y Preview |
 
-## 2. Aplicación
-1. Sube el repositorio a GitHub (sin `.env.local`: ya está en `.gitignore`).
-2. Importa el repositorio en Vercel.
-3. Variables de entorno en Vercel: `DATABASE_URL`, `NEXT_PUBLIC_SITE_URL` (dominio final) e `IP_SALT` (cadena aleatoria). Opcionales: `TURNSTILE_SECRET` y `NEXT_PUBLIC_TURNSTILE_SITE_KEY`, `RESEND_API_KEY` y `NOTIFY_EMAIL`, y las variables `S3_*`.
-4. Despliega y conecta el dominio.
+**Publicar cambios:** basta con `git push` a `main`. Vercel ejecuta `npm run vercel-build`, que:
+1. aplica las migraciones pendientes (`drizzle/`),
+2. ejecuta la carga inicial **solo si nunca se ejecutó** en esa base (marca `seed.version`),
+3. compila el sitio.
 
-## 3. Copias de seguridad
-- Supabase y Neon hacen copias automáticas diarias (revisa la retención de tu plan).
-- Copia manual: `pg_dump "$DATABASE_URL" > respaldo-AAAA-MM-DD.sql`. Guárdala fuera del servidor.
-- Antes de cada migración en producción, haz una copia manual.
+Cada rama distinta de `main` genera una vista previa (*Preview*). **Atención:** la integración de Neon conecta también las vistas previas a la misma base de producción. No pruebes datos destructivos en una vista previa.
 
-## 4. Seguridad en producción
-- `NEXT_PUBLIC_SITE_URL` debe usar `https://`. La cookie de sesión se marca `secure` en producción.
-- El límite de envíos por IP se guarda en memoria. Con varias instancias, conviene moverlo a Redis (Upstash).
-- Cambia la contraseña temporal del superadministrador después del primer ingreso.
+## Variables de entorno en Vercel
+| Variable | Entornos | Origen |
+|---|---|---|
+| `DATABASE_URL`, `POSTGRES_URL`, … | todos | Integración Neon |
+| `BLOB_READ_WRITE_TOKEN` | Production, Preview | Vercel Blob |
+| `IP_SALT` | Production (secreta) | Generada al azar |
+| `NEXT_PUBLIC_SITE_URL` | Production | `https://congreso-joven-portal.vercel.app` (cambiar al conectar un dominio propio) |
+
+## Tareas de administración sobre la base de producción
+Desde la carpeta del proyecto, con la sesión de Vercel iniciada (`vercel login`):
+
+```powershell
+$env:USE_REMOTE_DB = '1'; vercel env run -e production -- npm run admin:create -- correo@dominio.org "Nombre"; $env:USE_REMOTE_DB = '0'
+```
+
+`vercel env run` pasa las claves en memoria, sin guardarlas en archivos. `USE_REMOTE_DB=1` es obligatorio: sin esa variable, la computadora de desarrollo siempre usa la base local PGlite (`PGLITE_DIR`), aunque `.env.local` contenga claves de Neon.
+
+**Cuidado:** `vercel env pull` y algunos comandos de integración escriben las claves de producción en `.env.local`. Esto no es peligroso, gracias a la regla anterior, pero conviene borrarlas de ese archivo.
+
+## Dominio propio
+1. Comprar el dominio (p. ej. en un registrador de `.org.gt` o `.org`).
+2. Vercel → proyecto → Settings → Domains → agregar el dominio y seguir las instrucciones DNS.
+3. Actualizar `NEXT_PUBLIC_SITE_URL` en Production y volver a publicar.
+
+## Copias de seguridad
+- Neon guarda un historial de restauración (*point-in-time restore*); su duración depende del plan.
+- Copia manual: `pg_dump "$DATABASE_URL" > respaldo-AAAA-MM-DD.sql` (con `vercel env run -e production -- …`). Guárdala fuera del servidor.
+- Antes de una migración grande, haz una copia manual.
+
+## Seguridad
+- La cookie de sesión es `secure` en producción. Las contraseñas se guardan con bcrypt y los tokens de sesión como hash.
+- El límite de envíos de formularios por IP vive en memoria de cada instancia. Si hay abuso, conviene moverlo a Redis (Upstash, desde el Marketplace de Vercel).
+- Cada persona cambia su contraseña en **Panel → Mi cuenta y contraseña**.

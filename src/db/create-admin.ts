@@ -20,7 +20,7 @@ async function main() {
     .insert(s.users)
     .values({ email: email.toLowerCase(), name, passwordHash, role: "superadmin" })
     .onConflictDoUpdate({ target: s.users.email, set: { passwordHash, role: "superadmin", active: true } });
-  console.log(`\n✓ Superadministrador listo: ${email}\n  Contraseña temporal: ${password}\n  Cámbiala después del primer ingreso.\n`);
+  console.log(`\n✓ Superadministrador listo: ${email}\n  Contraseña temporal: ${password}\n  Cámbiala al ingresar, en Panel → «Mi cuenta y contraseña».\n`);
   await closeDb();
 }
 

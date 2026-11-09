@@ -8,7 +8,7 @@ function OneTimePassword({ email, password }: { email: string; password: string 
   return (
     <div className="mt-3 border-l-2 border-amber-600 bg-amber-50 p-3 text-sm" role="status">
       Contraseña temporal para <strong>{email}</strong>: <code className="select-all rounded bg-white px-1.5 py-0.5">{password}</code>
-      <p className="mt-1 text-xs text-graphite">Se muestra una sola vez. Entrégala por un canal privado y pide que la cambien.</p>
+      <p className="mt-1 text-xs text-graphite">Se muestra una sola vez. Entrégala por un canal privado; la persona debe cambiarla en «Mi cuenta y contraseña».</p>
     </div>
   );
 }

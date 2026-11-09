@@ -4,6 +4,7 @@
 1. Ve a `/admin` (o a «Acceso institucional» en el pie de página).
 2. Ingresa con tu correo y contraseña. Después de 5 intentos fallidos, la cuenta se bloquea 10 minutos.
 3. El menú lateral muestra solo las secciones que tu rol permite.
+4. **La primera vez**, cambia la contraseña temporal en **Mi cuenta y contraseña** (abajo, en el menú lateral). Debe tener al menos 12 caracteres; al cambiarla se cierran tus sesiones abiertas en otros equipos.
 
 ## Roles
 | Rol | Puede |
