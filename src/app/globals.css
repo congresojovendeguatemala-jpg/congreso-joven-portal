@@ -1,0 +1,112 @@
+@import "tailwindcss";
+
+/* Sistema de diseño Congreso Joven: azul institucional, azul profundo, gris arquitectónico
+   y una luz cálida discreta (las curules encendidas del hemiciclo). */
+@theme {
+  --color-ink: #060f24;
+  --color-navy-950: #081430;
+  --color-navy-900: #0b1a3d;
+  --color-navy-800: #10244f;
+  --color-navy-700: #183473;
+  --color-blue-600: #2a56c9;
+  --color-blue-500: #3b6ae0;
+  --color-blue-300: #9db8ff;
+  --color-blue-100: #e6edff;
+  --color-paper: #f6f7f9;
+  --color-stone-100: #eceef2;
+  --color-stone-200: #dfe3ea;
+  --color-stone-400: #9aa3b2;
+  --color-graphite: #3d4556;
+  --color-glow: #f4e6c0;
+  --color-glow-strong: #ffd98a;
+
+  --font-serif: var(--font-source-serif), Georgia, "Times New Roman", serif;
+  --font-sans: var(--font-public-sans), system-ui, -apple-system, "Segoe UI", sans-serif;
+
+  --tracking-label: 0.22em;
+}
+
+:root {
+  color-scheme: light;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: var(--color-paper);
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Etiqueta institucional: numeral romano + texto espaciado, como en la presentación. */
+.eyebrow {
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: var(--tracking-label);
+  text-transform: uppercase;
+}
+
+.rule-under {
+  position: relative;
+  padding-bottom: 0.6rem;
+}
+.rule-under::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 2.5rem;
+  height: 1px;
+  background: currentColor;
+  opacity: 0.5;
+}
+
+/* Placeholder elegante y claramente identificado para material pendiente. */
+.placeholder-hatch {
+  background-image: repeating-linear-gradient(
+    135deg,
+    color-mix(in oklab, currentColor 9%, transparent) 0 1px,
+    transparent 1px 9px
+  );
+}
+
+/* Aparición suave al hacer scroll (se activa desde Reveal). */
+.reveal {
+  opacity: 0;
+  transform: translateY(14px);
+  transition: opacity 0.8s cubic-bezier(0.2, 0.7, 0.2, 1), transform 0.8s cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+.reveal.is-visible {
+  opacity: 1;
+  transform: none;
+}
+
+@keyframes seat-glow {
+  0%, 100% { opacity: 0.85; }
+  50% { opacity: 1; }
+}
+.seat-lit {
+  animation: seat-glow 4s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  .reveal { opacity: 1; transform: none; transition: none; }
+  .seat-lit { animation: none; }
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-blue-500);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+
+.prose-cj p { margin: 0 0 1.1em; line-height: 1.75; }
+.prose-cj h2 { font-family: var(--font-serif); font-size: 1.6rem; margin: 1.6em 0 0.6em; }
+.prose-cj h3 { font-family: var(--font-serif); font-size: 1.25rem; margin: 1.4em 0 0.5em; }
+.prose-cj blockquote { border-left: 2px solid var(--color-blue-500); padding-left: 1.1rem; font-family: var(--font-serif); font-size: 1.2rem; color: var(--color-graphite); margin: 1.5em 0; }
+.prose-cj a { color: var(--color-blue-600); text-decoration: underline; text-underline-offset: 3px; }
+.prose-cj ul { list-style: disc; padding-left: 1.3rem; margin-bottom: 1.1em; }

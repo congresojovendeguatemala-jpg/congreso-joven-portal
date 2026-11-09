@@ -1,0 +1,49 @@
+{
+  "name": "congreso-joven-portal",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Portal institucional de Congreso Joven Guatemala",
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
+    "typecheck": "tsc --noEmit",
+    "db:generate": "drizzle-kit generate",
+    "db:migrate": "tsx src/db/migrate.ts",
+    "db:seed": "tsx src/db/seed.ts",
+    "db:setup": "npm run db:migrate && npm run db:seed",
+    "db:reset": "tsx src/db/reset.ts && npm run db:setup",
+    "admin:create": "tsx src/db/create-admin.ts"
+  },
+  "dependencies": {
+    "@electric-sql/pglite": "^0.5.15",
+    "@tiptap/extension-image": "^3.33.0",
+    "@tiptap/extension-link": "^3.33.0",
+    "@tiptap/extension-youtube": "^3.33.0",
+    "@tiptap/pm": "^3.33.0",
+    "@tiptap/react": "^3.33.0",
+    "@tiptap/starter-kit": "^3.33.0",
+    "bcryptjs": "^3.0.3",
+    "drizzle-orm": "^0.45.4",
+    "next": "^15.5.29",
+    "pg": "^8.23.1",
+    "react": "^19.3.1",
+    "react-dom": "^19.3.1",
+    "server-only": "^0.0.1",
+    "zod": "^4.6.7"
+  },
+  "devDependencies": {
+    "@next/env": "^16.4.5",
+    "@tailwindcss/postcss": "^4.3.5",
+    "@types/bcryptjs": "^2.4.6",
+    "@types/node": "^26.6.6",
+    "@types/pg": "^8.23.1",
+    "@types/react": "^19.3.0",
+    "@types/react-dom": "^19.3.0",
+    "drizzle-kit": "^0.31.11",
+    "tailwindcss": "^4.3.5",
+    "tsx": "^4.23.15",
+    "typescript": "^5.9.3"
+  }
+}
