@@ -2,10 +2,11 @@ import "./load-env";
 import { migrate as migratePg } from "drizzle-orm/node-postgres/migrator";
 import { migrate as migrateLite } from "drizzle-orm/pglite/migrator";
 import { db, closeDb } from "./index";
+import { remoteDatabaseUrl } from "./target";
 
 async function main() {
   const migrationsFolder = "./drizzle";
-  if ((process.env.DATABASE_URL ?? process.env.POSTGRES_URL)?.startsWith("postgres")) {
+  if (remoteDatabaseUrl()) {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     await migratePg(db as any, { migrationsFolder });
   } else {

@@ -1,4 +1,5 @@
 import * as schema from "./schema";
+import { remoteDatabaseUrl } from "./target";
 import type { PgDatabase, PgQueryResultHKT } from "drizzle-orm/pg-core";
 
 /**
@@ -12,9 +13,9 @@ export type DB = PgDatabase<PgQueryResultHKT, typeof schema>;
 const g = globalThis as unknown as { __cjdb?: DB; __cjdbClose?: () => Promise<void> };
 
 function create(): { db: DB; close: () => Promise<void> } {
-  // DATABASE_URL o POSTGRES_URL (nombre que usan las integraciones de Vercel con Neon)
-  const url = process.env.DATABASE_URL ?? process.env.POSTGRES_URL;
-  if (url && url.startsWith("postgres")) {
+  // DATABASE_URL o POSTGRES_URL (Vercel + Neon); ver target.ts para la regla de seguridad local.
+  const url = remoteDatabaseUrl();
+  if (url) {
     // eslint-disable-next-line @typescript-eslint/no-require-imports
     const { Pool } = require("pg") as typeof import("pg");
     // eslint-disable-next-line @typescript-eslint/no-require-imports
