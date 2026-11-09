@@ -3,8 +3,20 @@ import { eq } from "drizzle-orm";
 import { db, closeDb, schema as s } from "./index";
 import * as D from "./seed-data";
 
-/** Idempotente: puede ejecutarse varias veces sin duplicar datos. */
+/**
+ * Carga inicial: se ejecuta una sola vez por base de datos (marca «seed.version» en settings).
+ * Así, al publicar de nuevo, no reaparecen registros que el equipo haya borrado desde el panel.
+ * Para forzarla: npm run db:seed -- --force (no duplica datos, pero restaura lo borrado).
+ */
+const SEED_VERSION = 1;
+
 async function main() {
+  const [done] = await db.select().from(s.settings).where(eq(s.settings.key, "seed.version"));
+  if (done && Number(done.value) >= SEED_VERSION && !process.argv.includes("--force")) {
+    console.log("✓ Datos iniciales ya cargados anteriormente: no se modifica nada.");
+    await closeDb();
+    return;
+  }
   await db.insert(s.regions).values(D.REGIONS).onConflictDoNothing();
 
   await db
@@ -117,6 +129,10 @@ async function main() {
   }
 
   await db.insert(s.contentRequests).values(D.CONTENT_REQUESTS).onConflictDoNothing();
+  await db
+    .insert(s.settings)
+    .values({ key: "seed.version", value: SEED_VERSION })
+    .onConflictDoUpdate({ target: s.settings.key, set: { value: SEED_VERSION, updatedAt: new Date() } });
 
   console.log("✓ Datos iniciales cargados (sin datos personales de postulantes)");
   await closeDb();

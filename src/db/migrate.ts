@@ -5,7 +5,7 @@ import { db, closeDb } from "./index";
 
 async function main() {
   const migrationsFolder = "./drizzle";
-  if (process.env.DATABASE_URL?.startsWith("postgres")) {
+  if ((process.env.DATABASE_URL ?? process.env.POSTGRES_URL)?.startsWith("postgres")) {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     await migratePg(db as any, { migrationsFolder });
   } else {

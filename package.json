@@ -14,7 +14,8 @@
     "db:seed": "tsx src/db/seed.ts",
     "db:setup": "npm run db:migrate && npm run db:seed",
     "db:reset": "tsx src/db/reset.ts && npm run db:setup",
-    "admin:create": "tsx src/db/create-admin.ts"
+    "admin:create": "tsx src/db/create-admin.ts",
+    "vercel-build": "npm run db:migrate && npm run db:seed && next build"
   },
   "dependencies": {
     "@electric-sql/pglite": "^0.5.15",
@@ -24,6 +25,7 @@
     "@tiptap/pm": "^3.33.0",
     "@tiptap/react": "^3.33.0",
     "@tiptap/starter-kit": "^3.33.0",
+    "@vercel/blob": "^2.9.0",
     "bcryptjs": "^3.0.3",
     "drizzle-orm": "^0.45.4",
     "next": "^15.5.29",

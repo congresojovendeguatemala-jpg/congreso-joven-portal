@@ -12,13 +12,15 @@ export type DB = PgDatabase<PgQueryResultHKT, typeof schema>;
 const g = globalThis as unknown as { __cjdb?: DB; __cjdbClose?: () => Promise<void> };
 
 function create(): { db: DB; close: () => Promise<void> } {
-  const url = process.env.DATABASE_URL;
+  // DATABASE_URL o POSTGRES_URL (nombre que usan las integraciones de Vercel con Neon)
+  const url = process.env.DATABASE_URL ?? process.env.POSTGRES_URL;
   if (url && url.startsWith("postgres")) {
     // eslint-disable-next-line @typescript-eslint/no-require-imports
     const { Pool } = require("pg") as typeof import("pg");
     // eslint-disable-next-line @typescript-eslint/no-require-imports
     const { drizzle } = require("drizzle-orm/node-postgres") as typeof import("drizzle-orm/node-postgres");
-    const pool = new Pool({ connectionString: url, max: 10 });
+    // En Vercel cada instancia sin servidor abre su propio pool: pocas conexiones por instancia.
+    const pool = new Pool({ connectionString: url, max: process.env.VERCEL ? 3 : 10 });
     return { db: drizzle(pool, { schema }) as unknown as DB, close: () => pool.end() };
   }
   // eslint-disable-next-line @typescript-eslint/no-require-imports

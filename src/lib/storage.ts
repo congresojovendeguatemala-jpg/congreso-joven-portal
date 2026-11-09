@@ -4,11 +4,14 @@ import { mkdir, writeFile, readFile, unlink } from "node:fs/promises";
 import path from "node:path";
 
 /**
- * Almacenamiento de archivos.
- * - STORAGE_DRIVER=local (por defecto): disco en UPLOAD_DIR (./uploads), servido por /archivos/[...ruta].
- * - STORAGE_DRIVER=s3: cualquier servicio compatible con S3 (R2, S3, Supabase Storage). Requiere instalar
- *   @aws-sdk/client-s3 y definir S3_*; ver docs/DESPLIEGUE.md.
+ * Almacenamiento de archivos. El controlador se elige solo:
+ * - Producción en Vercel (existe BLOB_READ_WRITE_TOKEN): Vercel Blob. La URL guardada es la del CDN de Blob
+ *   (https://…blob.vercel-storage.com/…), con sufijo aleatorio para que no sea adivinable.
+ * - Desarrollo: disco local en UPLOAD_DIR (./uploads), servido por /archivos/[...ruta].
+ * Vercel no conserva archivos escritos en su disco entre publicaciones, por eso en producción se usa Blob.
  */
+const useBlob = () => Boolean(process.env.BLOB_READ_WRITE_TOKEN);
+const isBlobUrl = (u: string) => /^https:\/\/[a-z0-9-]+\.public\.blob\.vercel-storage\.com\//i.test(u);
 export const ALLOWED: Record<string, string> = {
   "image/jpeg": "jpg",
   "image/png": "png",
@@ -37,21 +40,31 @@ export async function saveUpload(file: File, folder = "general"): Promise<Saved>
   const mime = sniff(buf);
   if (!mime || !ALLOWED[mime]) throw new Error("Formato no permitido. Usa JPG, PNG, WEBP o PDF.");
 
-  if ((process.env.STORAGE_DRIVER ?? "local") !== "local") {
-    throw new Error("El almacenamiento S3 aún no está configurado (ver docs/DESPLIEGUE.md).");
-  }
   const safeFolder = folder.replace(/[^a-z0-9-]/gi, "").toLowerCase() || "general";
   const now = new Date();
   const rel = path.posix.join(safeFolder, `${now.getFullYear()}`, `${randomUUID()}.${ALLOWED[mime]}`);
+
+  if (useBlob()) {
+    const { put } = await import("@vercel/blob");
+    const blob = await put(rel, buf, { access: "public", contentType: mime, addRandomSuffix: true });
+    return { url: blob.url, mime, bytes: buf.length };
+  }
   const abs = path.join(uploadRoot(), rel);
   await mkdir(path.dirname(abs), { recursive: true });
   await writeFile(abs, buf);
   return { url: `/archivos/${rel}`, mime, bytes: buf.length };
 }
 
-/** Borra el archivo físico de una URL /archivos/… (ignora URLs externas o ya borradas). */
+/** Borra el archivo de una URL subida por el sitio (Blob o /archivos/…). Ignora URLs externas o ya borradas. */
 export async function removeUpload(url: string | null | undefined) {
-  if (!url?.startsWith("/archivos/")) return;
+  if (!url) return;
+  if (isBlobUrl(url)) {
+    if (!useBlob()) return;
+    const { del } = await import("@vercel/blob");
+    await del(url).catch(() => undefined);
+    return;
+  }
+  if (!url.startsWith("/archivos/")) return;
   const root = uploadRoot();
   const abs = path.resolve(root, url.slice("/archivos/".length));
   if (!abs.startsWith(root + path.sep)) return;
