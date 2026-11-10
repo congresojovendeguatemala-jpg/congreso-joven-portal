@@ -11,7 +11,7 @@ export const metadata: Metadata = {
   metadataBase: new URL(SITE),
   title: { default: "Congreso Joven Guatemala", template: "%s · Congreso Joven Guatemala" },
   description:
-    "Plataforma juvenil apartidista de alcance nacional para la participación democrática, la formación política y el liderazgo de las nuevas generaciones de Guatemala.",
+    "Comunidad activa de 2,000 jóvenes en toda la República: plataforma juvenil apartidista para la participación democrática, la formación política y el liderazgo de las nuevas generaciones de Guatemala.",
   openGraph: { type: "website", locale: "es_GT", siteName: "Congreso Joven Guatemala" },
 };
 

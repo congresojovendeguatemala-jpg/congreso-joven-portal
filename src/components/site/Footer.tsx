@@ -42,7 +42,7 @@ export function Footer({ editorialName, email, social = [] }: { editorialName: s
           <div>
             <Logo />
             <p className="mt-5 max-w-xs text-sm leading-relaxed">
-              Plataforma juvenil apartidista, de alcance nacional, para la participación democrática, la formación política y el liderazgo.
+              Comunidad activa de 2,000 jóvenes en toda la República. Plataforma juvenil apartidista para la participación democrática, la formación política y el liderazgo.
             </p>
             <p className="mt-4 text-xs">
               Medio institucional: <Link href="/actualidad" className="text-blue-300 hover:text-white">{editorialName}</Link>

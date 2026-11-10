@@ -42,7 +42,7 @@ export default async function Home() {
               <br className="hidden md:block" /> para jóvenes.
             </h1>
             <p className="mt-6 max-w-md text-lg leading-relaxed text-blue-100/75">
-              Congreso Joven Guatemala abre espacios para que las nuevas generaciones conozcan el funcionamiento del Estado, deliberen, formen liderazgo y construyan propuestas para el país.
+              Congreso Joven Guatemala es una comunidad activa de 2,000 jóvenes en toda la República que abre espacios para que las nuevas generaciones conozcan el funcionamiento del Estado, deliberen, formen liderazgo y construyan propuestas para el país.
             </p>
             <div className="mt-9 flex flex-wrap gap-3">
               <Link href="/participa" className="rounded-full bg-white px-6 py-3 text-sm font-semibold text-ink transition hover:bg-glow">
@@ -71,7 +71,7 @@ export default async function Home() {
           <Reveal delay={100}>
             <div className="space-y-5 text-lg leading-relaxed text-graphite">
               <p>
-                Congreso Joven es una plataforma juvenil de carácter apartidista orientada a la participación democrática, la formación política, el liderazgo juvenil y la representación territorial.
+                Congreso Joven es una comunidad activa de 2,000 jóvenes en toda la República: una plataforma juvenil de carácter apartidista orientada a la participación democrática, la formación política, el liderazgo juvenil y la representación territorial.
               </p>
               <p>
                 Sus integrantes, jóvenes de entre 20 y 32 años según el registro institucional, se organizan en un modelo inspirado en el Congreso de la República y ejercen períodos de un año.

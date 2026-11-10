@@ -26,7 +26,7 @@ export default async function Conocenos() {
 
   return (
     <>
-      <PageHero n={1} label="Conócenos" title={<>Una organización <span className="text-blue-300">de jóvenes, para jóvenes.</span></>} intro="Congreso Joven Guatemala es una plataforma juvenil apartidista, con presencia nacional, orientada a la participación democrática, la formación política y la construcción de propuestas." />
+      <PageHero n={1} label="Conócenos" title={<>Una organización <span className="text-blue-300">de jóvenes, para jóvenes.</span></>} intro="Congreso Joven Guatemala es una comunidad activa de 2,000 jóvenes en toda la República: una plataforma juvenil apartidista orientada a la participación democrática, la formación política y la construcción de propuestas." />
 
       <section className="py-20">
         <Container className="grid gap-12 md:grid-cols-3">
