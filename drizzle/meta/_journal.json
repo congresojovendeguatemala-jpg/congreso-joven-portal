@@ -29,6 +29,13 @@
       "when": 1794342201301,
       "tag": "0003_eventos-detalle",
       "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1794348854600,
+      "tag": "0004_inscripciones-eventos",
+      "breakpoints": true
     }
   ]
 }

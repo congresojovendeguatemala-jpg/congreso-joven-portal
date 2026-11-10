@@ -403,6 +403,38 @@ export const events = pgTable("events", {
   published: boolean("published").notNull().default(false),
 });
 
+export const registrationStatusEnum = pgEnum("registration_status", ["confirmado", "asistio", "cancelado"]);
+
+/**
+ * Confirmaciones de asistencia a eventos. Contienen datos personales (DPI incluido):
+ * nunca se muestran en el sitio público; solo en el panel, con la capacidad events.manage.
+ */
+export const eventRegistrations = pgTable(
+  "event_registrations",
+  {
+    id: integer("id").primaryKey().generatedAlwaysAsIdentity(),
+    eventId: integer("event_id")
+      .notNull()
+      .references(() => events.id, { onDelete: "cascade" }),
+    firstNames: text("first_names").notNull(),
+    lastNames: text("last_names").notNull(),
+    /** CUI del DPI, 13 dígitos sin espacios. */
+    dpi: text("dpi").notNull(),
+    institution: text("institution").notNull(),
+    age: integer("age").notNull(),
+    email: text("email").notNull(),
+    phone: text("phone").notNull(),
+    status: registrationStatusEnum("status").notNull().default("confirmado"),
+    privacyAccepted: boolean("privacy_accepted").notNull(),
+    photoConsent: boolean("photo_consent").notNull().default(false),
+    ipHash: text("ip_hash"),
+    createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+    updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow(),
+  },
+  // Una persona (DPI) solo puede confirmar una vez por evento.
+  (t) => [uniqueIndex("event_registrations_event_dpi_uq").on(t.eventId, t.dpi), index("event_registrations_event_idx").on(t.eventId)],
+);
+
 /* ───────────── Multimedia y documentos ───────────── */
 
 /** Álbumes de fotos (galerías de eventos, generaciones, actividades). */

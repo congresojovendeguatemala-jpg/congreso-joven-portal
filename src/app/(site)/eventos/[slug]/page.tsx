@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { and, eq } from "drizzle-orm";
+import { and, count, eq, ne } from "drizzle-orm";
+import { EventRegistrationForm } from "@/components/site/EventRegistrationForm";
 import { db, schema as s } from "@/db";
 import { Container } from "@/components/ui";
 import { Lightbox } from "@/components/site/Lightbox";
@@ -24,6 +25,16 @@ export default async function Evento({ params }: P) {
   const e = await load((await params).slug);
   if (!e) notFound();
   const ended = (e.endsAt ?? new Date(e.startsAt.getTime() + 4 * 3600_000)).getTime() < Date.now();
+  // Cupos: solo se cuenta (nunca se muestran datos de las personas inscritas).
+  let remaining: number | null = null;
+  if (e.capacity) {
+    const [{ c }] = await db
+      .select({ c: count() })
+      .from(s.eventRegistrations)
+      .where(and(eq(s.eventRegistrations.eventId, e.id), ne(s.eventRegistrations.status, "cancelado")));
+    remaining = Math.max(0, e.capacity - c);
+  }
+  const canRegister = e.registrationOpen && !ended && remaining !== 0;
   const groups = [...new Set((e.speakers ?? []).map((x) => x.group || "Participantes"))];
   const paragraphs = (e.body ?? "").split(/\n\s*\n/).map((p) => p.trim()).filter(Boolean);
   const jsonLd = {
@@ -74,10 +85,10 @@ export default async function Evento({ params }: P) {
                 <a href={`/eventos/${e.slug}/calendario`} className="rounded-full bg-navy-900 px-6 py-3 text-sm font-semibold text-white hover:bg-blue-600">
                   Agregar a mi calendario
                 </a>
-                {e.registrationOpen && (
-                  <Link href="/participa/participante" className="rounded-full border border-navy-900 px-6 py-3 text-sm font-semibold text-navy-900 hover:bg-navy-900 hover:text-white">
-                    Inscribirme
-                  </Link>
+                {canRegister && (
+                  <a href="#confirmar" className="rounded-full border border-navy-900 px-6 py-3 text-sm font-semibold text-navy-900 hover:bg-navy-900 hover:text-white">
+                    Confirmar asistencia
+                  </a>
                 )}
               </div>
             )}
@@ -86,6 +97,21 @@ export default async function Evento({ params }: P) {
               <div className="prose-cj mt-10 text-lg text-graphite">
                 {paragraphs.map((p, i) => <p key={i}>{p}</p>)}
               </div>
+            )}
+
+            {e.registrationOpen && !ended && (
+              <section id="confirmar" className="mt-12 scroll-mt-28 border border-stone-200 bg-white p-6 md:p-8">
+                <p className="eyebrow text-blue-600">Registro</p>
+                <h2 className="mt-2 font-serif text-3xl">Confirma tu asistencia</h2>
+                {remaining !== null && (
+                  <p className="mt-2 text-sm text-graphite">{remaining > 0 ? `Quedan ${remaining} cupos disponibles.` : "El cupo de este evento está completo."}</p>
+                )}
+                {canRegister && (
+                  <div className="mt-6">
+                    <EventRegistrationForm eventId={e.id} eventTitle={e.title} />
+                  </div>
+                )}
+              </section>
             )}
 
             {groups.map((g) => (

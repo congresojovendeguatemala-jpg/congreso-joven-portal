@@ -24,7 +24,10 @@ const GROUPS: { title: string; items: Item[] }[] = [
   },
   { title: "Institución", items: [r("personas"), r("organos"), r("historia")] },
   { title: "Territorio", items: [r("regiones"), r("departamentos")] },
-  { title: "Trabajo", items: [r("proyectos"), r("eventos"), r("internacional"), r("alianzas")] },
+  {
+    title: "Trabajo",
+    items: [r("proyectos"), r("eventos"), { href: "/admin/asistencia", label: "Asistencia a eventos", cap: "events.manage" }, r("internacional"), r("alianzas")],
+  },
   {
     title: "Archivo",
     items: [{ href: "/admin/multimedia", label: "Multimedia y documentos", cap: "media.upload" }, r("albumes")],

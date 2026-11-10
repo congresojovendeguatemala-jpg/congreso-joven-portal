@@ -27,7 +27,8 @@ const EVENT = {
     { name: "Mynor de la Rosa", role: "", group: "Diputados" },
   ],
   images: ["/images/eventos/congreso-juvenil-2026-afiche.webp", "/images/eventos/congreso-juvenil-2026-participantes.webp"],
-  registrationOpen: false,
+  // Formulario de confirmación de asistencia abierto (sin cupo máximo; se ajusta desde el panel).
+  registrationOpen: true,
   published: true,
 };
 
