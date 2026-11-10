@@ -15,7 +15,8 @@
     "db:setup": "npm run db:migrate && npm run db:seed",
     "db:reset": "tsx src/db/reset.ts && npm run db:setup",
     "admin:create": "tsx src/db/create-admin.ts",
-    "vercel-build": "npm run db:migrate && npm run db:seed && next build"
+    "vercel-build": "npm run db:migrate && npm run db:seed && next build",
+    "data:stats-2000": "tsx src/db/update-stats-2000.ts"
   },
   "dependencies": {
     "@electric-sql/pglite": "^0.5.15",

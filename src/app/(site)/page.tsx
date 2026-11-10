@@ -54,9 +54,9 @@ export default async function Home() {
             </div>
           </div>
           <div className="relative">
-            <Hemicycle lit={104} seed={11} className="w-full drop-shadow-[0_30px_60px_rgba(0,0,0,0.5)]" title="Hemiciclo de 160 curules con 104 encendidas" />
+            <Hemicycle lit={104} seed={11} className="w-full drop-shadow-[0_30px_60px_rgba(0,0,0,0.5)]" title="Hemiciclo de 160 curules, motivo de Congreso Joven" />
             <p className="mt-3 text-center text-xs text-blue-100/50">
-              104 curules encendidas: jóvenes electos en línea según el registro institucional de 2024.
+              Una comunidad activa de 2,000 jóvenes en toda la República.
             </p>
           </div>
         </Container>

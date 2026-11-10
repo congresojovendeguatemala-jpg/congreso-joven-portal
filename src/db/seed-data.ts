@@ -505,7 +505,6 @@ export const ENGAGEMENTS = [
 /** Cifras de portada: cada una con fecha y fuente. Editables en Configuración. */
 export const STATS = [
   { value: "2,000", label: "Jóvenes en la comunidad activa", note: "Registro institucional · nov. 2026", verification: "internal" },
-  { value: "104", label: "Jóvenes electos en línea", note: "Registro institucional · 2024", verification: "internal" },
   { value: "22", label: "Departamentos representados", note: "Registro institucional · 2024", verification: "internal" },
   { value: "128+", label: "Participantes en el Parlamento Juvenil", note: "Registro institucional · 30 abr 2026", verification: "internal" },
   { value: "928", label: "Personas en el padrón electoral de referencia", note: "Registro institucional · fecha por confirmar", verification: "internal" },
