@@ -333,7 +333,7 @@ export const TIMELINE: TL[] = [
     date: "2024-10-01",
     title: "Primeras bancadas registradas",
     summary:
-      "Se registran las bancadas «Jóvenes por Guatemala» y «Generación que impacta». Según el registro institucional, 104 jóvenes fueron electos en línea con representación de 22 departamentos.",
+      "Se registran las bancadas «Jóvenes por Guatemala» y «Generación que impacta», en una elección en línea con representación de 22 departamentos. Hoy Congreso Joven es una comunidad activa de 2,000 jóvenes en toda la República.",
     category: "generacion",
     organizer: "congreso_joven",
     sourceLabel: "Registro institucional",

@@ -31,6 +31,21 @@ async function main() {
   }
   console.log(changed || !has2000 ? "✓ Cifras actualizadas:" : "✓ Sin cambios (ya estaba actualizado):");
   for (const st of next) console.log(`  ${st.value} · ${st.label}`);
+
+  // Hito de octubre de 2024 en la cronología: misma corrección de texto.
+  const OLD_TL = "Según el registro institucional, 104 jóvenes fueron electos en línea con representación de 22 departamentos.";
+  const tl = await db.select({ id: s.timelineEvents.id, summary: s.timelineEvents.summary }).from(s.timelineEvents).where(eq(s.timelineEvents.title, "Primeras bancadas registradas"));
+  let tlChanged = 0;
+  for (const t of tl) {
+    if (t.summary?.includes(OLD_TL)) {
+      const summary = t.summary
+        .replace("«Generación que impacta». " + OLD_TL, "«Generación que impacta», en una elección en línea con representación de 22 departamentos.")
+        .concat(" Hoy Congreso Joven es una comunidad activa de 2,000 jóvenes en toda la República.");
+      await db.update(s.timelineEvents).set({ summary }).where(eq(s.timelineEvents.id, t.id));
+      tlChanged++;
+    }
+  }
+  console.log(tlChanged ? `✓ Cronología actualizada (${tlChanged} hito)` : "✓ Cronología sin cambios (ya estaba actualizada o fue editada a mano)");
   await closeDb();
 }
 

@@ -6,9 +6,9 @@ import { publicDocs } from "@/lib/documents";
 export const metadata: Metadata = { title: "Elecciones y democracia interna" };
 
 const DATA = [
-  { value: "≈ 2,000", label: "Registros de integrantes", note: "Cifra aproximada · fecha de corte por confirmar" },
+  { value: "2,000", label: "Jóvenes en la comunidad activa", note: "Registro institucional · nov. 2026" },
   { value: "928", label: "Padrón electoral de referencia", note: "Fecha y proceso por confirmar" },
-  { value: "104", label: "Jóvenes electos en línea", note: "Proceso de 2024" },
+  { value: "22", label: "Departamentos representados", note: "Registro institucional · 2024" },
 ];
 
 const ELECTORAL: [string, string][] = [["convocatoria", "Convocatorias"], ["reglamento", "Reglamento electoral"], ["resultados", "Resultados y autoridades electas"], ["acta", "Actas"]];
