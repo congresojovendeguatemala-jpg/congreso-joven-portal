@@ -208,10 +208,19 @@ export default async function Home() {
             ) : (
               <ul className="space-y-4">
                 {events.map((ev) => (
-                  <li key={ev.slug} className="border border-stone-200 bg-white p-5">
-                    <p className="eyebrow text-blue-600">{fmtDate(ev.startsAt)}</p>
-                    <p className="mt-2 font-serif text-lg">{ev.title}</p>
-                    {ev.location && <p className="text-sm text-graphite">{ev.location}</p>}
+                  <li key={ev.slug}>
+                    <Link href={`/eventos/${ev.slug}`} className="group flex gap-4 border border-stone-200 bg-white p-4 transition hover:border-blue-500/50">
+                      {ev.images?.[0] && (
+                        // eslint-disable-next-line @next/next/no-img-element
+                        <img src={ev.images[0]} alt="" loading="lazy" className="h-24 w-20 shrink-0 object-cover" />
+                      )}
+                      <div>
+                        <p className="eyebrow text-blue-600">{fmtDate(ev.startsAt)}</p>
+                        <p className="mt-2 font-serif text-lg leading-snug group-hover:text-blue-600">{ev.title}</p>
+                        {ev.summary && <p className="text-sm text-graphite">{ev.summary}</p>}
+                        {ev.location && <p className="mt-1 text-xs text-stone-400">{ev.location}</p>}
+                      </div>
+                    </Link>
                   </li>
                 ))}
               </ul>

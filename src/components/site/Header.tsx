@@ -49,7 +49,7 @@ export function Header() {
   }, []);
   useEffect(() => setOpen(false), [path]);
   // Páginas de detalle sin portada oscura: el encabezado debe ser sólido para leerse.
-  const lightTop = /^\/(actualidad|autores|estructura|participa)\/[^/]+/.test(path);
+  const lightTop = /^\/(actualidad|autores|estructura|participa|eventos)\/[^/]+/.test(path);
 
   return (
     <header

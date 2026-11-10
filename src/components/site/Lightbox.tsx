@@ -4,7 +4,8 @@ import { useCallback, useEffect, useState } from "react";
 export type Photo = { id: number; url: string; title: string | null; caption: string | null; credit: string | null };
 
 /** Cuadrícula de fotos con visor ampliado accesible (teclado: ← → Esc). */
-export function Lightbox({ photos }: { photos: Photo[] }) {
+/** fit="poster": muestra cada imagen completa (afiches verticales), sin recortar. */
+export function Lightbox({ photos, fit = "cover" }: { photos: Photo[]; fit?: "cover" | "poster" }) {
   const [i, setI] = useState<number | null>(null);
   const close = useCallback(() => setI(null), []);
   const move = useCallback((d: number) => setI((v) => (v === null ? v : (v + d + photos.length) % photos.length)), [photos.length]);
@@ -27,12 +28,17 @@ export function Lightbox({ photos }: { photos: Photo[] }) {
   const p = i === null ? null : photos[i];
   return (
     <>
-      <ul className="grid grid-cols-2 gap-2 sm:grid-cols-3 lg:grid-cols-4">
+      <ul className={fit === "poster" ? "grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-1" : "grid grid-cols-2 gap-2 sm:grid-cols-3 lg:grid-cols-4"}>
         {photos.map((ph, k) => (
           <li key={ph.id}>
             <button type="button" onClick={() => setI(k)} className="group block w-full overflow-hidden bg-stone-200" aria-label={`Ampliar: ${ph.title ?? "fotografía"}`}>
               {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src={ph.url} alt={ph.title ?? ""} loading="lazy" className="aspect-[4/3] w-full object-cover transition duration-500 group-hover:scale-[1.03]" />
+              <img
+                src={ph.url}
+                alt={ph.title ?? ""}
+                loading="lazy"
+                className={fit === "poster" ? "h-auto w-full transition duration-500 group-hover:opacity-90" : "aspect-[4/3] w-full object-cover transition duration-500 group-hover:scale-[1.03]"}
+              />
             </button>
           </li>
         ))}

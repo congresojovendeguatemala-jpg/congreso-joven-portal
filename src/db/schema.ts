@@ -392,6 +392,12 @@ export const events = pgTable("events", {
   startsAt: timestamp("starts_at", { withTimezone: true }).notNull(),
   endsAt: timestamp("ends_at", { withTimezone: true }),
   location: text("location"),
+  /** Texto largo del evento (párrafos separados por línea en blanco). */
+  body: text("body"),
+  /** Afiches e imágenes del evento (URLs). La primera es la principal. */
+  images: jsonb("images").$type<string[]>(),
+  /** Conferencistas e invitados: nombre, cargo y grupo («Conferencista», «Diputados»…). */
+  speakers: jsonb("speakers").$type<{ name: string; role: string; group: string }[]>(),
   registrationOpen: boolean("registration_open").notNull().default(false),
   capacity: integer("capacity"),
   published: boolean("published").notNull().default(false),
